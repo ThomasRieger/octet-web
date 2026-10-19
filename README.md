@@ -10,10 +10,15 @@ pnpm build      # static site in out/
 ```
 
 ```
-app/          layout, page (all sections), styles, favicon
-components/   the interactive bits: rolling headline IP, tabs, paste demo, copy button
-lib/          setup parser (+ test) and site links / release version
-public/       app screenshots
+app/(en)/     English root layout + page  →  /
+app/(th)/     Thai root layout + page     →  /th/
+app/          styles, favicon
+components/   home (all sections), root (html, fonts, metadata), and the interactive bits:
+              rolling headline IP, hero tour deck, paste demo, copy button
+lib/          i18n (all copy, EN + TH), setup parser (+ test), site links / release version
+public/       app screenshots (WebP)
 ```
+
+All text lives in `lib/i18n.ts`; the Thai follows the app's own wording.
 
 The release version is fetched from GitHub at build time, so rebuild after each Octet release.

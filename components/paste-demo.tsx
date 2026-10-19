@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Dict } from "@/lib/i18n.ts";
 import { parseConfig, resolver, scope, validIp } from "@/lib/config.ts";
 
 const examples = [
@@ -8,8 +9,6 @@ const examples = [
   "10.0.1.124 mask 255.255.254.0 gw 10.0.0.1 dns 9.9.9.9",
   "100.64.0.7/10 dns 94.140.14.14 94.140.15.15",
 ];
-
-const tag = (v = "") => (!v ? "" : !validIp(v) ? "Invalid" : resolver(v) ?? scope(v) ?? "");
 
 function Octets({ v }: { v: string }) {
   const parts = v ? v.split(".") : ["", "", "", ""];
@@ -20,41 +19,39 @@ function Octets({ v }: { v: string }) {
   );
 }
 
-export function PasteDemo() {
+export function PasteDemo({ t }: { t: Dict["paste"] }) {
   const [text, setText] = useState(examples[0]);
   const c = parseConfig(text);
-  const rows: [string, string, string][] = [
-    ["IP address", c?.address ?? "", tag(c?.address)],
-    ["Subnet mask", c?.subnet ?? "", c ? `/${c.prefix}` : ""],
-    ["Gateway", c?.gateway ?? "", tag(c?.gateway)],
-    ["Preferred DNS", c?.dns1 ?? "", tag(c?.dns1)],
-    ["Alternate DNS", c?.dns2 ?? "", tag(c?.dns2)],
+  const tag = (v = "") => (!v ? "" : !validIp(v) ? t.invalid : resolver(v) ?? scope(v) ?? "");
+  const values: [string, string][] = [
+    [c?.address ?? "", tag(c?.address)],
+    [c?.subnet ?? "", c ? `/${c.prefix}` : ""],
+    [c?.gateway ?? "", tag(c?.gateway)],
+    [c?.dns1 ?? "", tag(c?.dns1)],
+    [c?.dns2 ?? "", tag(c?.dns2)],
   ];
 
   return (
     <div className="paste">
       <label className="paste-in">
         <span className="prompt" aria-hidden="true">›</span>
-        <span className="sr-only">Paste a setup</span>
+        <span className="sr-only">{t.input}</span>
         <input value={text} onChange={e => setText(e.target.value)} spellCheck={false} autoComplete="off" />
       </label>
 
       <div className="rows" data-empty={!c}>
-        {rows.map(([label, v, t]) => (
-          <div className="row" key={label}>
-            <span className="label">{label}</span>
+        {values.map(([v, tg], n) => (
+          <div className="row" key={n}>
+            <span className="label">{t.rows[n]}</span>
             <Octets v={v} />
-            <span className="tag" data-bad={t === "Invalid"} key={t}>{t}</span>
+            <span className="tag" data-bad={tg === t.invalid} key={tg}>{tg}</span>
           </div>
         ))}
-        <p className="status" aria-live="polite">
-          {c ? "Paste this anywhere in Octet and the form fills in."
-             : "Not a setup yet. Start with an address, then /prefix or a mask."}
-        </p>
+        <p className="status" aria-live="polite">{c ? t.ok : t.bad}</p>
       </div>
 
       <div className="examples">
-        <span>Try</span>
+        <span>{t.try}</span>
         {examples.map(x => <button key={x} onClick={() => setText(x)} aria-pressed={x === text}>{x}</button>)}
       </div>
     </div>

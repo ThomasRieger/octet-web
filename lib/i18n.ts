@@ -1,0 +1,198 @@
+// All page copy, English and Thai. Thai follows the app's own wording (ui/index.html):
+// casual, and network terms like Gateway, DNS and Admin stay in English.
+
+export type Lang = "en" | "th";
+
+const en = {
+  meta: {
+    title: "Octet: switch IPv4 and DNS on Windows in seconds",
+    description: "A fast, modern take on Simple IP Config, written in Rust. One portable .exe, no installer, no telemetry.",
+  },
+  nav: { paste: "Paste", engine: "Engine", privacy: "Privacy", download: "Download" },
+  hero: {
+    windows: "Windows 10 & 11",
+    latest: "Latest release",
+    before: "Switch to",
+    after: "in seconds.",
+    label: "Switch IPv4 and DNS in seconds.",
+    lede: "Octet changes IPv4 and DNS on Windows in one click, then shows you who else is on the network. A fast, modern take on Simple IP Config, written in Rust.",
+    download: "Download Octet.exe",
+    source: "View source",
+    meta: "One portable file · no installer · no telemetry · MIT",
+  },
+  tour: {
+    hint: "Keys 1–5 switch tabs, like Ctrl+1–5 in the app",
+    alt: "Octet, {name} tab",
+    tabs: [
+      { img: "ip", name: "IP & DNS", title: "DHCP or manual in one click.",
+        body: "Every field is checked as you type. Before Apply, Octet asks the network whether someone already has the address. After, it pings the gateway and DNS for you." },
+      { img: "advanced", name: "Advanced", title: "Several addresses and gateways.",
+        body: "Stack extra addresses and gateways on one adapter, each with its own metric." },
+      { img: "ping", name: "Ping", title: "Live latency, jitter and loss.",
+        body: "A running graph to the gateway or any host, sent out this adapter and no other." },
+      { img: "scan", name: "Scan", title: "Who else is on the subnet.",
+        body: "Every address in the range as a grid, with the maker and MAC of whatever answers." },
+      { img: "info", name: "Info", title: "Everything about the adapter.",
+        body: "What Windows knows about the adapter, in one list. One click copies it." },
+    ],
+  },
+  paste: {
+    eyebrow: "Paste",
+    title: "One line in, a whole setup out.",
+    sub: "Try it. This is the parser from the app: an address with /prefix or a mask, then gw and dns.",
+    input: "Paste a setup",
+    rows: ["IP address", "Subnet mask", "Gateway", "Preferred DNS", "Alternate DNS"],
+    ok: "Paste this anywhere in Octet and the form fills in.",
+    bad: "Not a setup yet. Start with an address, then /prefix or a mask.",
+    try: "Try",
+    invalid: "Invalid",
+  },
+  engine: {
+    eyebrow: "Engine",
+    title: "Fast, all the way down.",
+    sub: "Rust talking to Windows directly. A DNS change takes milliseconds.",
+    nos: ["ipconfig", "PowerShell", "flashing consoles"],
+    api: [
+      ["IP Helper", "Addresses, DNS and DHCP."],
+      ["ICMP", "Ping, and the checks after Apply."],
+      ["WinHTTP", "The one web request."],
+    ],
+    details: [
+      ["Follows Windows", "Cable, Wi-Fi and address changes show up on their own."],
+      ["The usual buttons", "Release and renew, flush DNS, enable and disable adapters."],
+      ["DNS presets", "Google, Cloudflare, Quad9, AdGuard, OpenDNS and NextDNS, named as you type them."],
+      ["One line, whole setup", "Copy a configuration as text, paste it on another PC."],
+      ["Keyboard first", "Ctrl+1 to Ctrl+5 switch tabs."],
+      ["Two languages", "English and ไทย."],
+    ],
+  },
+  privacy: {
+    eyebrow: "Privacy",
+    title: "Private by default.",
+    sub: "No account, no telemetry, no server of its own.",
+    diagram: "Octet talks to your network. The internet only when you ask.",
+    pc: "This PC",
+    net: "Your network",
+    wire: "ARP · ping · lookup",
+    wireOut: "public IP, on click",
+    items: [
+      ["Sends only what you'd expect", "An ARP check before Apply, pings to the gateway and DNS after it, pings and ARP while you Ping or Scan, and a reverse lookup for the gateway."],
+      ["MAC addresses stay home", "Device makers come from the IEEE list built into the app. MACs are never looked up online."],
+      ["One request to the internet", "Your public IP, through ipinfo.io, and only when you click it."],
+      ["Admin only for the change", "Octet opens without admin rights. UAC asks when you Apply, toggle an adapter or release and renew, and only that change runs elevated."],
+    ],
+  },
+  get: {
+    title: "Get Octet.",
+    sub: "One file. Run it.",
+    all: "All releases",
+    notes: [
+      ["Windows 11", "Runs as is."],
+      ["Windows 10", "Needs the WebView2 Runtime. Most PCs already have it."],
+      ["Not code-signed yet", "If SmartScreen stops it, choose More info, then Run anyway."],
+    ],
+    hash: "Check it against",
+    copy: "Copy",
+    copied: "Copied",
+  },
+  footer: { inspired: "Inspired by", noCode: ", shares no code with it.", tracking: "No cookies, no tracking." },
+};
+
+export type Dict = typeof en;
+
+const th: Dict = {
+  meta: {
+    title: "Octet: ตั้งค่า IPv4 และ DNS บน Windows ได้ในไม่กี่วินาที",
+    description: "Simple IP Config แบบใหม่ที่เร็วกว่า เขียนด้วย Rust ไฟล์ .exe ไฟล์เดียว ไม่ต้องติดตั้ง ไม่เก็บข้อมูลการใช้งาน",
+  },
+  nav: { paste: "วางค่า", engine: "เบื้องหลัง", privacy: "ความเป็นส่วนตัว", download: "ดาวน์โหลด" },
+  hero: {
+    windows: "Windows 10 และ 11",
+    latest: "เวอร์ชันล่าสุด",
+    before: "เปลี่ยนเป็น",
+    after: "ในไม่กี่วินาที",
+    label: "ตั้งค่า IPv4 และ DNS ได้ในไม่กี่วินาที",
+    lede: "Octet เปลี่ยน IPv4 และ DNS บน Windows ได้ในคลิกเดียว แล้วยังดูได้ว่ามีใครอยู่ในเครือข่ายบ้าง เป็น Simple IP Config แบบใหม่ที่เร็วกว่า เขียนด้วย Rust",
+    download: "ดาวน์โหลด Octet.exe",
+    source: "ดูซอร์สโค้ด",
+    meta: "ไฟล์เดียว · ไม่ต้องติดตั้ง · ไม่เก็บข้อมูลการใช้งาน · MIT",
+  },
+  tour: {
+    hint: "กด 1–5 เพื่อสลับแท็บ เหมือน Ctrl+1–5 ในแอป",
+    alt: "Octet แท็บ {name}",
+    tabs: [
+      { img: "ip", name: "IP & DNS", title: "DHCP หรือกำหนดเอง ในคลิกเดียว",
+        body: "ทุกช่องตรวจให้ระหว่างพิมพ์ ก่อนบันทึก Octet จะเช็กก่อนว่ามีเครื่องอื่นใช้ IP นี้อยู่หรือเปล่า หลังบันทึกก็ ping Gateway กับ DNS ให้เลย" },
+      { img: "advanced", name: "ขั้นสูง", title: "หลาย IP หลาย Gateway",
+        body: "เพิ่ม IP และ Gateway ได้หลายชุดในอะแดปเตอร์เดียว แต่ละชุดตั้ง Metric เองได้" },
+      { img: "ping", name: "Ping", title: "Latency, jitter และ loss แบบสด",
+        body: "กราฟสดไปยัง Gateway หรือเครื่องไหนก็ได้ ส่งออกทางอะแดปเตอร์นี้เท่านั้น" },
+      { img: "scan", name: "หา IP", title: "ใครอยู่ใน subnet นี้บ้าง",
+        body: "ทุก IP ในวงแสดงเป็นตาราง พร้อมชื่อผู้ผลิตและ MAC ของเครื่องที่ตอบกลับ" },
+      { img: "info", name: "ข้อมูล", title: "ทุกอย่างของอะแดปเตอร์",
+        body: "ข้อมูลที่ Windows มีเกี่ยวกับอะแดปเตอร์นี้ รวมไว้ในที่เดียว คลิกเดียวคัดลอกได้" },
+    ],
+  },
+  paste: {
+    eyebrow: "วางค่า",
+    title: "บรรทัดเดียว ได้ค่าครบชุด",
+    sub: "ลองเลย นี่คือตัวอ่านค่าตัวเดียวกับในแอป ใส่ IP ตามด้วย /prefix หรือ mask แล้วต่อด้วย gw และ dns",
+    input: "วางค่าทั้งหมด",
+    rows: ["IP address", "Subnet mask", "Gateway", "DNS หลัก", "DNS สำรอง"],
+    ok: "วางที่ไหนก็ได้ใน Octet แล้วฟอร์มจะกรอกให้เอง",
+    bad: "ยังอ่านไม่ได้ เริ่มด้วย IP แล้วตามด้วย /prefix หรือ mask",
+    try: "ลอง",
+    invalid: "ไม่ถูกต้อง",
+  },
+  engine: {
+    eyebrow: "เบื้องหลัง",
+    title: "เร็วตั้งแต่ข้างใน",
+    sub: "Rust คุยกับ Windows โดยตรง เปลี่ยน DNS เสร็จในระดับมิลลิวินาที",
+    nos: ["ipconfig", "PowerShell", "หน้าต่าง console"],
+    api: [
+      ["IP Helper", "IP, DNS และ DHCP"],
+      ["ICMP", "Ping และการเช็กหลังบันทึก"],
+      ["WinHTTP", "คำขอเว็บครั้งเดียวที่มี"],
+    ],
+    details: [
+      ["ตาม Windows ทัน", "เสียบสาย เปลี่ยน Wi-Fi หรือ IP เปลี่ยน แอปก็อัปเดตเอง"],
+      ["ปุ่มที่ต้องใช้ครบ", "Release และ Renew ล้างแคช DNS เปิดและปิดอะแดปเตอร์"],
+      ["DNS สำเร็จรูป", "Google, Cloudflare, Quad9, AdGuard, OpenDNS และ NextDNS พิมพ์แล้วขึ้นชื่อให้เลย"],
+      ["บรรทัดเดียวครบชุด", "คัดลอกค่าทั้งหมดเป็นข้อความ แล้วไปวางบนอีกเครื่อง"],
+      ["คีย์ลัดครบ", "Ctrl+1 ถึง Ctrl+5 สลับแท็บ"],
+      ["สองภาษา", "English และไทย"],
+    ],
+  },
+  privacy: {
+    eyebrow: "ความเป็นส่วนตัว",
+    title: "เป็นส่วนตัวตั้งแต่แรก",
+    sub: "ไม่ต้องมีบัญชี ไม่เก็บข้อมูลการใช้งาน และไม่มีเซิร์ฟเวอร์ของตัวเอง",
+    diagram: "Octet คุยกับเครือข่ายของคุณ และออกอินเทอร์เน็ตเฉพาะตอนที่คุณกด",
+    pc: "เครื่องนี้",
+    net: "เครือข่ายของคุณ",
+    wire: "ARP · ping · lookup",
+    wireOut: "IP สาธารณะ เมื่อกด",
+    items: [
+      ["ส่งเท่าที่จำเป็น", "เช็ก ARP ก่อนบันทึก ping Gateway กับ DNS หลังบันทึก ping และ ARP ตอนใช้ Ping หรือหา IP และค้นชื่อของ Gateway"],
+      ["MAC ไม่ออกไปไหน", "ชื่อผู้ผลิตอุปกรณ์มาจากรายชื่อ IEEE ที่อยู่ในแอป ไม่มีการค้น MAC ทางออนไลน์"],
+      ["ออกอินเทอร์เน็ตแค่ครั้งเดียว", "ดู IP สาธารณะผ่าน ipinfo.io และเฉพาะตอนที่คุณกดเท่านั้น"],
+      ["ขอสิทธิ์ Admin เฉพาะตอนเปลี่ยน", "เปิด Octet ได้โดยไม่ต้องใช้สิทธิ์ Admin UAC จะถามตอนบันทึก เปิดปิดอะแดปเตอร์ หรือ Release/Renew และให้สิทธิ์แค่คำสั่งนั้น"],
+    ],
+  },
+  get: {
+    title: "รับ Octet",
+    sub: "ไฟล์เดียว เปิดใช้ได้เลย",
+    all: "ทุกเวอร์ชัน",
+    notes: [
+      ["Windows 11", "ใช้ได้ทันที"],
+      ["Windows 10", "ต้องมี WebView2 Runtime ซึ่งเครื่องส่วนใหญ่มีอยู่แล้ว"],
+      ["ยังไม่ได้เซ็นโค้ด", "ถ้า SmartScreen เตือน ให้กด More info แล้ว Run anyway"],
+    ],
+    hash: "ตรวจสอบกับไฟล์",
+    copy: "คัดลอก",
+    copied: "คัดลอกแล้ว",
+  },
+  footer: { inspired: "ได้แรงบันดาลใจจาก", noCode: " แต่ไม่ได้ใช้โค้ดร่วมกัน", tracking: "ไม่มีคุกกี้ ไม่มีการติดตาม" },
+};
+
+export const dict: Record<Lang, Dict> = { en, th };
