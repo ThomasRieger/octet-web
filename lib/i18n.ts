@@ -5,7 +5,6 @@ export type Lang = "en" | "th";
 
 const en = {
   meta: {
-    title: "Octet: switch IPv4 and DNS on Windows in seconds",
     description: "A fast, modern take on Simple IP Config, written in Rust. One portable .exe, no installer, no telemetry.",
   },
   nav: { paste: "Paste", engine: "Engine", privacy: "Privacy", download: "Download" },
@@ -102,7 +101,6 @@ export type Dict = typeof en;
 
 const th: Dict = {
   meta: {
-    title: "Octet: เปลี่ยน IPv4 และ DNS บน Windows ได้ในไม่กี่วินาที",
     description: "Simple IP Config ยุคใหม่ที่เร็วกว่าเดิม เขียนด้วย Rust ไฟล์ .exe ไฟล์เดียว ไม่ต้องติดตั้ง ไม่เก็บข้อมูลการใช้งาน",
   },
   nav: { paste: "วางค่า", engine: "ความเร็ว", privacy: "ความเป็นส่วนตัว", download: "ดาวน์โหลด" },

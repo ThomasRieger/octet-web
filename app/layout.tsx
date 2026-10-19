@@ -9,7 +9,7 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const anuphan = Anuphan({ subsets: ["thai"], variable: "--font-anuphan", display: "swap", preload: false });
 
-export const metadata: Metadata = { title: dict.en.meta.title, description: dict.en.meta.description };
+export const metadata: Metadata = { title: "Octet", description: dict.en.meta.description };
 
 // Runs before first paint: pick the saved language, else Thai for Thai browsers. A Thai page stays hidden
 // until React has swapped the text in (or 1.2s pass, so a script failure never leaves it blank).
