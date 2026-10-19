@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
-// Static site: `next build` writes plain HTML to out/, host it anywhere (GitHub Pages, Vercel, Cloudflare).
+// "/octet-web" when served from <user>.github.io/octet-web (set by the deploy workflow), "" locally.
+const basePath = process.env.BASE_PATH ?? "";
+
+// Static site: `next build` writes plain HTML to out/, which the deploy workflow publishes to GitHub Pages.
 const config: NextConfig = {
   output: "export",
-  trailingSlash: true,   // th/index.html, so /th/ works on any static host
+  basePath,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },   // for plain <img src> paths, which basePath doesn't rewrite
   images: { unoptimized: true },
 };
 

@@ -1,10 +1,13 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useEffect, useState, type CSSProperties } from "react";
+import { flushSync } from "react-dom";
 import { CopyButton } from "@/components/copy-button.tsx";
 import { HeroTour } from "@/components/hero-tour.tsx";
 import { OctetRoll } from "@/components/octet-roll.tsx";
 import { PasteDemo } from "@/components/paste-demo.tsx";
 import { dict, type Lang } from "@/lib/i18n.ts";
-import { DOWNLOAD, latestVersion, RELEASES, REPO } from "@/lib/site.ts";
+import { asset, DOWNLOAD, RELEASES, REPO } from "@/lib/site.ts";
 
 const d = (n: number) => ({ "--d": n }) as CSSProperties;   // stagger step for .rise
 const HASH = String.raw`(Get-FileHash .\Octet.exe).Hash`;
@@ -23,26 +26,47 @@ const Head = ({ t, left }: { t: { eyebrow: string; title: string; sub: string };
   </header>
 );
 
-export async function Home({ lang }: { lang: Lang }) {
-  const t = dict[lang];
-  const version = await latestVersion();
-  const home = lang === "en" ? "/" : "/th/";
+export function Home({ version }: { version: string | null }) {
+  // null until mounted: the prerendered HTML is English, the head script may have asked for Thai.
+  const [lang, setLang] = useState<Lang | null>(null);
+  const t = dict[lang ?? "en"];
+
+  useEffect(() => setLang(document.documentElement.lang === "th" ? "th" : "en"), []);
+  useEffect(() => {
+    if (!lang) return;
+    const html = document.documentElement;
+    html.lang = lang;
+    delete html.dataset.pending;
+    document.title = dict[lang].meta.title;
+  }, [lang]);
+
+  // Swap the text in place; a view transition crossfades it where the browser supports one.
+  const choose = (l: Lang) => {
+    if (l === lang) return;
+    try { localStorage.setItem("lang", l); } catch {}
+    const swap = () => flushSync(() => setLang(l));
+    if ("startViewTransition" in document) document.startViewTransition(swap);
+    else swap();
+  };
 
   return (
     <>
       <header className="nav">
         <div className="wrap nav-in">
-          <a className="brand" href={home}><img src="/icon.png" width={26} height={26} alt="" />Octet</a>
+          <a className="brand" href="#"><img src={asset("/icon.png")} width={26} height={26} alt="" />Octet</a>
           <nav className="links" aria-label="Sections">
             <a href="#paste">{t.nav.paste}</a>
             <a href="#engine">{t.nav.engine}</a>
             <a href="#privacy">{t.nav.privacy}</a>
             <a href={REPO}>GitHub</a>
           </nav>
-          <nav className="lang" aria-label="Language">
-            <a href="/" hrefLang="en" lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a>
-            <a href="/th/" hrefLang="th" lang="th" aria-current={lang === "th" ? "page" : undefined}>ไทย</a>
-          </nav>
+          <div className="lang" role="group" aria-label="Language">
+            {(["en", "th"] as const).map(l => (
+              <button key={l} lang={l} aria-pressed={(lang ?? "en") === l} onClick={() => choose(l)}>
+                {l === "en" ? "EN" : "ไทย"}
+              </button>
+            ))}
+          </div>
           <a className="btn" href="#download">{t.nav.download}</a>
         </div>
       </header>
@@ -85,7 +109,7 @@ export async function Home({ lang }: { lang: Lang }) {
         <section className="wrap section" id="privacy">
           <Head t={t.privacy} />
           <div className="diagram reveal" role="img" aria-label={t.privacy.diagram}>
-            <div className="node"><img src="/icon.png" width={22} height={22} alt="" />{t.privacy.pc}</div>
+            <div className="node"><img src={asset("/icon.png")} width={22} height={22} alt="" />{t.privacy.pc}</div>
             <div className="wire"><span>{t.privacy.wire}</span></div>
             <div className="node">{t.privacy.net}</div>
             <div className="wire dashed"><span>{t.privacy.wireOut}</span></div>
@@ -98,7 +122,7 @@ export async function Home({ lang }: { lang: Lang }) {
 
         <section className="wrap section" id="download">
           <div className="get reveal">
-            <img className="get-icon" src="/icon.png" width={80} height={80} alt="" loading="lazy" />
+            <img className="get-icon" src={asset("/icon.png")} width={80} height={80} alt="" loading="lazy" />
             <h2>{t.get.title}</h2>
             <p className="get-sub">{version ? `${version} · ` : ""}{t.get.sub}</p>
             <div className="ctas">
@@ -118,7 +142,7 @@ export async function Home({ lang }: { lang: Lang }) {
 
       <footer className="footer">
         <div className="wrap footer-in">
-          <a className="brand" href={home}><img src="/icon.png" width={20} height={20} alt="" loading="lazy" />Octet</a>
+          <a className="brand" href="#"><img src={asset("/icon.png")} width={20} height={20} alt="" loading="lazy" />Octet</a>
           <nav aria-label="Project">
             <a href={REPO}>GitHub</a>
             <a href={RELEASES}>Releases</a>

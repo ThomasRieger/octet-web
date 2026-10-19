@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { Dict } from "@/lib/i18n.ts";
+import { asset } from "@/lib/site.ts";
 
 // The five tab screenshots as a rotating deck: the current tab in front, its neighbours fanned behind.
 // It cycles until the visitor picks a tab; the progress bar's CSS animation is the timer, so hover pauses it.
@@ -39,7 +40,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
       <div className="deck" data-ready={ready}>
         <div className="deck-in" id="tour-panel" role="tabpanel" aria-labelledby={`tab-${tabs[i].img}`}>
           {tabs.map((tab, n) => (
-            <img key={tab.img} src={`/screens/${tab.img}.webp`} width={568} height={596} decoding="async"
+            <img key={tab.img} src={asset(`/screens/${tab.img}.webp`)} width={568} height={596} decoding="async"
               fetchPriority={n === 0 ? "high" : "low"} data-pos={pos(n)} aria-hidden={n !== i}
               alt={t.alt.replace("{name}", tab.name)} onClick={() => n !== i && pick(n)} />
           ))}
