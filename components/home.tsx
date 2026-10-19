@@ -37,7 +37,6 @@ export function Home({ version }: { version: string | null }) {
     const html = document.documentElement;
     html.lang = lang;
     delete html.dataset.pending;
-    document.title = dict[lang].meta.title;
   }, [lang]);
 
   // Swap the text in place; a view transition crossfades it where the browser supports one.
