@@ -47,7 +47,7 @@ export function PasteDemo({ t }: { t: Dict["paste"] }) {
             <span className="tag" data-bad={tg === t.invalid} key={tg}>{tg}</span>
           </div>
         ))}
-        <p className="status" aria-live="polite">{c ? t.ok : t.bad}</p>
+        <p className="status" aria-live="polite" key={c ? "ok" : "bad"}>{c ? t.ok : t.bad}</p>
       </div>
 
       <div className="examples">
