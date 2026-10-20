@@ -22,6 +22,9 @@ test("scope and resolver", () => {
   assert.equal(scope("172.20.0.1"), "Private");
   assert.equal(scope("172.32.0.1"), "Public");
   assert.equal(scope("100.100.1.1"), "CGNAT");
-  assert.equal(resolver("9.9.9.9"), "Quad9");
-  assert.equal(resolver("10.0.0.1"), null);
+  assert.equal(resolver("9.9.9.9")?.logo, "quad9");
+  assert.equal(resolver("10.0.0.1", "10.0.0.1")?.text, "Router");
+  assert.equal(resolver("10.0.0.2", "10.0.0.1")?.text, "Local");
+  assert.equal(resolver("4.2.2.2")?.text, "Public");
+  assert.equal(resolver("10.0.0"), null);
 });
