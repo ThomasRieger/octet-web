@@ -7,9 +7,10 @@ import { HeroTour } from "@/components/hero-tour.tsx";
 import { OctetRoll } from "@/components/octet-roll.tsx";
 import { PasteDemo } from "@/components/paste-demo.tsx";
 import { dict, type Lang } from "@/lib/i18n.ts";
-import { asset, DOWNLOAD, RELEASES, REPO } from "@/lib/site.ts";
+import { asset, DOWNLOAD, LATEST_API, RELEASES, REPO } from "@/lib/site.ts";
 
 const d = (n: number) => ({ "--d": n }) as CSSProperties;   // stagger step for .rise
+const k = (n: number) => ({ "--k": n }) as CSSProperties;   // stagger step for .reveal (each one enters a little later)
 const HASH = String.raw`(Get-FileHash .\Octet.exe).Hash`;
 
 const DownloadIcon = () => (
@@ -26,7 +27,12 @@ const Head = ({ t, left }: { t: { eyebrow: string; title: string; sub: string };
   </header>
 );
 
-export function Home({ version }: { version: string | null }) {
+export function Home({ version: built }: { version: string | null }) {
+  // The build knows the version as of the last deploy; the browser asks GitHub so a new release shows at once.
+  const [version, setVersion] = useState(built);
+  useEffect(() => {
+    fetch(LATEST_API).then(r => r.ok ? r.json() : null).then(j => j?.tag_name && setVersion(j.tag_name)).catch(() => {});
+  }, []);
   // null until mounted: the prerendered HTML is English, the head script may have asked for Thai.
   const [lang, setLang] = useState<Lang | null>(null);
   const t = dict[lang ?? "en"];
@@ -75,7 +81,7 @@ export function Home({ version }: { version: string | null }) {
           <div className="hero-bg" aria-hidden="true" />
           <div className="wrap">
             <a className="badge rise" style={d(0)} href={RELEASES}>
-              <span className="pulse" />{version ?? t.hero.latest} · {t.hero.windows}
+              <span className="pulse" /><span><span className="ver" key={version ?? ""}>{version ?? t.hero.latest}</span> · {t.hero.windows}</span>
             </a>
             <h1 className="rise" style={d(1)} aria-label={t.hero.label}>
               <span>{t.hero.before} <OctetRoll /></span>
@@ -100,8 +106,8 @@ export function Home({ version }: { version: string | null }) {
           <Head t={t.engine} />
           <p className="nos reveal">{t.engine.nos.map(n => <s key={n}>{n}</s>)}</p>
           <div className="cols three">
-            {t.engine.api.map(([h, p]) => <div className="col reveal" key={h}><code>{h}</code><p>{p}</p></div>)}
-            {t.engine.details.map(([h, p]) => <div className="col reveal" key={h}><h3>{h}</h3><p>{p}</p></div>)}
+            {t.engine.api.map(([h, p], n) => <div className="col reveal" style={k(n % 3)} key={h}><code>{h}</code><p>{p}</p></div>)}
+            {t.engine.details.map(([h, p], n) => <div className="col reveal" style={k(n % 3)} key={h}><h3>{h}</h3><p>{p}</p></div>)}
           </div>
         </section>
 
@@ -112,10 +118,10 @@ export function Home({ version }: { version: string | null }) {
             <div className="wire"><span>{t.privacy.wire}</span></div>
             <div className="node">{t.privacy.net}</div>
             <div className="wire dashed"><span>{t.privacy.wireOut}</span></div>
-            <div className="node out">ipinfo.io</div>
+            <div className="node out">ipinfo.io · github.com</div>
           </div>
           <div className="cols two">
-            {t.privacy.items.map(([h, p]) => <div className="col reveal" key={h}><h3>{h}</h3><p>{p}</p></div>)}
+            {t.privacy.items.map(([h, p], n) => <div className="col reveal" style={k(n % 2)} key={h}><h3>{h}</h3><p>{p}</p></div>)}
           </div>
         </section>
 
@@ -131,6 +137,7 @@ export function Home({ version }: { version: string | null }) {
             <ul className="notes">
               {t.get.notes.map(([b, p]) => <li key={b}><b>{b}</b>{p}</li>)}
             </ul>
+            <p className="signed">{t.get.signed}</p>
             <div className="hash">
               <span>{t.get.hash} <code>Octet.exe.sha256</code></span>
               <pre><code>{HASH}</code><CopyButton text={HASH} label={t.get.copy} done={t.get.copied} /></pre>
