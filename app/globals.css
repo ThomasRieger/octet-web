@@ -231,8 +231,9 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 @media (max-width: 900px) { .paste { width: 100%; max-width: 520px; margin: 0 auto 28px; } }
 .status { margin: 0; color: var(--faint); font-size: 13px; animation: blur-in 600ms var(--ease-in-out) both; }   /* tx-blur-crossfade */
 @keyframes blur-in { from { opacity: 0; filter: blur(10px); } }
-.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.examples > span { margin-right: 4px; color: var(--faint); font-size: 13px; }
+.examples { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 10px; justify-items: start; }
+.examples > span { grid-row: 1 / 4; padding-top: 3px; color: var(--faint); font-size: 13px; }   /* "Try" beside the first; the three line up under each other */
+.examples button { grid-column: 2; }
 .examples button { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 3px 10px;
   border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: 12px var(--mono);
   cursor: pointer; transition: color var(--tint), border-color var(--tint); }
