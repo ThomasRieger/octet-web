@@ -85,9 +85,15 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
         ))}
       </div>
 
-      <div className="tour-copy" key={i} aria-live="polite">
-        <p className="tour-title">{tabs[i].title}</p>
-        <p>{tabs[i].body}</p>
+      {/* All five texts share one cell, so the block is as tall as the longest and nothing below moves;
+          the old one fades up and out while the new one rises in. */}
+      <div className="tour-copy" aria-live="polite">
+        {tabs.map((tab, n) => (
+          <div key={tab.img} data-on={n === i} aria-hidden={n !== i}>
+            <p className="tour-title">{tab.title}</p>
+            <p>{tab.body}</p>
+          </div>
+        ))}
       </div>
       <p className="hint">{t.hint}</p>
     </div>
