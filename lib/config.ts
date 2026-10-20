@@ -13,38 +13,6 @@ export const masks = Array.from({ length: 33 }, (_, p) => {
 
 export const validIp = (v: string) => /^\d{1,3}(\.\d{1,3}){3}$/.test(v) && v.split(".").every(o => +o <= 255);
 
-const num = (v: string) => v.split(".").reduce((n, o) => n * 256 + +o, 0);
-const inNet = (v: string, net: string, p: number) => Math.floor(num(v) / 2 ** (32 - p)) === Math.floor(num(net) / 2 ** (32 - p));
-
-export function scope(v: string): string | null {
-  if (!validIp(v)) return null;
-  if (inNet(v, "127.0.0.0", 8)) return "Loop";
-  if (inNet(v, "169.254.0.0", 16)) return "APIPA";
-  if (inNet(v, "10.0.0.0", 8) || inNet(v, "172.16.0.0", 12) || inNet(v, "192.168.0.0", 16)) return "Private";
-  if (inNet(v, "100.64.0.0", 10)) return "CGNAT";
-  return "Public";
-}
-
-// Same table and order as the app (ui/index.html, resolvers / resolver()); logos are the app's own (public/logos).
-const resolvers: [string[], string, string][] = [
-  [["8.8.8.8", "8.8.4.4"], "Google Public DNS", "google"],
-  [["1.1.1.1", "1.0.0.1", "1.1.1.2", "1.0.0.2", "1.1.1.3", "1.0.0.3"], "Cloudflare", "cloudflare"],
-  [["9.9.9.9", "149.112.112.112"], "Quad9", "quad9"],
-  [["94.140.14.14", "94.140.15.15"], "AdGuard DNS", "adguard"],
-  [["208.67.222.222", "208.67.220.220"], "OpenDNS (Cisco)", "cisco"],
-  [["45.90.28.0", "45.90.30.0"], "NextDNS", "nextdns"],
-];
-export type Mark = { logo?: string; text?: string; title: string };
-export function resolver(v: string, gw = ""): Mark | null {
-  if (!validIp(v)) return null;
-  const hit = resolvers.find(([ips]) => ips.includes(v));
-  if (hit) return { logo: hit[2], title: hit[1] };
-  if (v === "100.100.100.100") return { logo: "tailscale", title: "Tailscale MagicDNS" };
-  if (gw && v === gw) return { text: "Router", title: "Your gateway answers DNS" };
-  const sc = scope(v);
-  return sc !== "Public" ? { text: "Local", title: `${sc} DNS server on your network` } : { text: "Public", title: "Public resolver" };
-}
-
 export function parseConfig(text: string): Config | null {
   const m = text.match(new RegExp(String.raw`^\s*${IP}\s*(?:/(\d{1,2})|\s+(?:mask\s+)?${IP})`, "i"));
   if (!m || !validIp(m[1])) return null;
