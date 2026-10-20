@@ -210,7 +210,8 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 
 /* ---------- paste demo: rows drawn like the app's form ---------- */
 /* No card: the line, the app window and the examples, one under the other at the window's width */
-.paste { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; width: 100%; max-width: 520px; margin-inline: auto; }
+.paste { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.paste > .head { margin-bottom: 14px; }
 .paste-in { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 18px; border: 1px solid var(--border);
   border-radius: 12px; background: var(--surface); transition: border-color var(--tint), box-shadow var(--tint); }
 .paste-in:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
@@ -227,6 +228,7 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 @container (max-width: 415px) { .app-frame iframe { zoom: 0.7; } }
 @container (max-width: 363px) { .app-frame iframe { zoom: 0.6; } }
 .paste > .status { margin-top: -6px; padding: 0 4px; }
+@media (max-width: 900px) { .paste { width: 100%; max-width: 520px; margin: 0 auto 28px; } }
 .status { margin: 0; color: var(--faint); font-size: 13px; animation: blur-in 600ms var(--ease-in-out) both; }   /* tx-blur-crossfade */
 @keyframes blur-in { from { opacity: 0; filter: blur(10px); } }
 .examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
