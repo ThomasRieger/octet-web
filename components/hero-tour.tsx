@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import type { Dict } from "@/lib/i18n.ts";
 import { asset } from "@/lib/site.ts";
 
@@ -11,6 +11,22 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(true);
   const [ready, setReady] = useState(false);
+  const [tilt, setTilt] = useState(false);
+
+  // The front screenshot leans a few degrees toward a mouse pointer; it eases back flat when the pointer leaves.
+  const lean = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const b = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - b.left) / b.width - 0.5, y = (e.clientY - b.top) / b.height - 0.5;
+    e.currentTarget.style.setProperty("--ry", `${(x * 8).toFixed(2)}deg`);
+    e.currentTarget.style.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
+    setTilt(true);
+  };
+  const flat = (e: PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.style.removeProperty("--ry");
+    e.currentTarget.style.removeProperty("--rx");
+    setTilt(false);
+  };
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
 
   const pick = (n: number, focus = false) => {
@@ -37,7 +53,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
 
   return (
     <div className="tour">
-      <div className="deck" data-ready={ready}>
+      <div className="deck" data-ready={ready} data-tilt={tilt} onPointerMove={lean} onPointerLeave={flat}>
         <div className="deck-in" id="tour-panel" role="tabpanel" aria-labelledby={`tab-${tabs[i].img}`}>
           {tabs.map((tab, n) => (
             <img key={tab.img} src={asset(`/screens/${tab.img}.webp`)} width={568} height={596} decoding="async"
