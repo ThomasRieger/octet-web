@@ -209,33 +209,33 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 @media (max-width: 600px) { .cols.three, .cols.two { grid-template-columns: minmax(0, 1fr); gap: 22px; } }
 
 /* ---------- paste demo: rows drawn like the app's form ---------- */
-.paste { border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden;
-  box-shadow: 0 40px 80px -48px color-mix(in oklch, var(--ink) 45%, transparent); }
-.paste-in { display: flex; align-items: center; gap: 12px; height: 58px; padding: 0 20px; border-bottom: 1px solid var(--border);
-  transition: box-shadow var(--tint); }
-.paste-in:focus-within { box-shadow: inset 0 -2px 0 var(--accent); }
+/* No card: the line, the app window and the examples, one under the other at the window's width */
+.paste { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; width: 100%; max-width: 520px; margin-inline: auto; }
+.paste-in { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 18px; border: 1px solid var(--border);
+  border-radius: 12px; background: var(--surface); transition: border-color var(--tint), box-shadow var(--tint); }
+.paste-in:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
 .prompt { color: var(--accent); font: 600 20px var(--mono); }
 .paste-in input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; color: var(--ink); font: 15px var(--mono); }
 /* The real app in a frame, at its window size (ui/index.html: --win-w 520px, --win-h 548px) */
-.app-frame { display: grid; place-items: center; padding: 16px 0 4px; }
-.app-frame iframe { width: 520px; height: 548px; border: 0; border-radius: 8px; background: var(--bg); color-scheme: normal; }
+.app-frame { display: grid; place-items: center; }
+.app-frame iframe { width: 520px; height: 548px; border: 0; border-radius: 10px; background: var(--bg); color-scheme: normal;
+  box-shadow: 0 0 0 1px var(--border), 0 40px 80px -40px color-mix(in oklch, var(--ink) 45%, transparent); }
 /* Narrower cards shrink the window whole, as a screenshot would, instead of squeezing its layout */
 .app-frame { container-type: inline-size; }
 @container (max-width: 519px) { .app-frame iframe { zoom: 0.9; } }
 @container (max-width: 467px) { .app-frame iframe { zoom: 0.8; } }
 @container (max-width: 415px) { .app-frame iframe { zoom: 0.7; } }
 @container (max-width: 363px) { .app-frame iframe { zoom: 0.6; } }
-.paste > .status { padding: 4px 20px 14px; }
+.paste > .status { margin-top: -6px; padding: 0 4px; }
 .status { margin: 0; color: var(--faint); font-size: 13px; animation: blur-in 600ms var(--ease-in-out) both; }   /* tx-blur-crossfade */
 @keyframes blur-in { from { opacity: 0; filter: blur(10px); } }
-.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 12px 20px 16px; border-top: 1px solid var(--border); background: var(--side); }
+.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .examples > span { margin-right: 4px; color: var(--faint); font-size: 13px; }
 .examples button { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 3px 10px;
   border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); font: 12px var(--mono);
   cursor: pointer; transition: color var(--tint), border-color var(--tint); }
 .examples button:hover, .examples button[aria-pressed="true"] { color: var(--ink); border-color: var(--border-strong); }
 @media (max-width: 600px) {
-  .paste-in { padding: 0 14px; } .examples { padding: 12px 14px 14px; } .paste > .status { padding: 4px 14px 14px; }
 }
 
 /* ---------- engine ---------- */
