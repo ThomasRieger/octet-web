@@ -22,7 +22,7 @@ export function OctetRoll() {
       {now.map((o, n) => (
         <Fragment key={n}>
           {n > 0 && <span className="roll-dot">.</span>}
-          <span className="roll-cell" style={{ "--n": n } as CSSProperties}>
+          <span className="roll-cell" style={{ "--c": now.slice(0, n).join("").length } as CSSProperties}>
             {old[n] !== undefined && old[n] !== o && <span className="out" key={`out-${i}`}>{old[n]}</span>}
             <span key={o}>{o}</span>
           </span>
