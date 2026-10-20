@@ -99,7 +99,7 @@ export function Home({ version: built }: { version: string | null }) {
 
         <section className="wrap section split" id="paste">
           <Head t={t.paste} left />
-          <div className="reveal"><PasteDemo t={t.paste} /></div>
+          <div className="reveal"><PasteDemo t={t.paste} lang={lang ?? "en"} /></div>
         </section>
 
         <section className="wrap section" id="engine">

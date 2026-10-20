@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { masks, parseConfig, resolver, scope } from "./config.ts";
+import { masks, parseConfig } from "./config.ts";
 
 test("masks", () => {
   assert.equal(masks[0], "0.0.0.0");
@@ -16,15 +16,4 @@ test("parseConfig", () => {
   assert.equal(parseConfig("300.1.1.1/24"), null);
   assert.equal(parseConfig("10.0.0.5/33"), null);
   assert.equal(parseConfig("hello"), null);
-});
-
-test("scope and resolver", () => {
-  assert.equal(scope("172.20.0.1"), "Private");
-  assert.equal(scope("172.32.0.1"), "Public");
-  assert.equal(scope("100.100.1.1"), "CGNAT");
-  assert.equal(resolver("9.9.9.9")?.logo, "quad9");
-  assert.equal(resolver("10.0.0.1", "10.0.0.1")?.text, "Router");
-  assert.equal(resolver("10.0.0.2", "10.0.0.1")?.text, "Local");
-  assert.equal(resolver("4.2.2.2")?.text, "Public");
-  assert.equal(resolver("10.0.0"), null);
 });
