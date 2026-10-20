@@ -2,7 +2,7 @@
 :root {
   color-scheme: light;
   --bg: oklch(0.975 0.002 250); --surface: oklch(0.995 0.001 250); --side: oklch(0.945 0.004 250);
-  --ink: oklch(0.24 0.01 250); --muted: oklch(0.47 0.012 250); --faint: oklch(0.62 0.01 250);
+  --ink: oklch(0.24 0.01 250); --muted: oklch(0.47 0.012 250); --faint: oklch(0.53 0.01 250);
   --border: oklch(0.89 0.006 250); --border-strong: oklch(0.76 0.008 250);
   --accent: oklch(0.5 0.15 255); --accent-ink: oklch(0.99 0 0); --accent-soft: oklch(0.93 0.035 255);
   --ok: oklch(0.6 0.13 150); --bad: oklch(0.55 0.18 25);
@@ -17,7 +17,7 @@
   :root {
     color-scheme: dark;
     --bg: oklch(0.185 0.006 250); --surface: oklch(0.225 0.006 250); --side: oklch(0.2 0.006 250);
-    --ink: oklch(0.95 0.004 250); --muted: oklch(0.72 0.01 250); --faint: oklch(0.56 0.01 250);
+    --ink: oklch(0.95 0.004 250); --muted: oklch(0.72 0.01 250); --faint: oklch(0.64 0.01 250);
     --border: oklch(0.3 0.008 250); --border-strong: oklch(0.42 0.01 250);
     --accent: oklch(0.74 0.12 255); --accent-ink: oklch(0.17 0.02 255); --accent-soft: oklch(0.32 0.05 255);
     --ok: oklch(0.76 0.13 150); --bad: oklch(0.72 0.15 25);
@@ -56,7 +56,9 @@ html:lang(th) :is(h1, h2, h3, .brand) { letter-spacing: 0; line-height: 1.3; }
 .btn.lg { height: 50px; padding: 0 24px; border-radius: 12px; font-size: 15px; }
 
 /* ---------- nav: clear at the top, solid once you scroll ---------- */
-.nav { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
+.nav { position: sticky; top: 0; z-index: 20; }
+/* the bar's glass lives on a pseudo-element so the scroll fade-in is an opacity change, not a repaint */
+.nav::before { content: ""; position: absolute; inset: 0; z-index: -1; border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   background: color-mix(in oklch, var(--bg) 80%, transparent); backdrop-filter: blur(14px); }
 .nav-in { display: flex; align-items: center; gap: 24px; height: 72px; }
 .brand { display: flex; align-items: center; gap: 10px; font: 650 19px var(--display); letter-spacing: -0.02em; text-decoration: none; }
@@ -95,7 +97,7 @@ h1 .muted { color: var(--faint); }
 .roll-cell { display: inline-block; overflow: hidden; }
 .roll-cell > span { display: inline-block; animation: roll 700ms var(--ease-out) both; animation-delay: calc(var(--n) * 70ms); }
 .roll-dot { color: var(--faint); margin: 0 0.02em; }
-@keyframes roll { from { transform: translateY(0.7em); opacity: 0; filter: blur(8px); } }
+@keyframes roll { from { transform: translateY(0.7em); opacity: 0; } }
 .lede { max-width: 36em; margin: 0 auto 32px; color: var(--muted); font-size: clamp(17px, 1.6vw, 19px); text-wrap: pretty; }
 .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .meta { margin: 18px 0 0; color: var(--faint); font-size: 13px; }
@@ -135,7 +137,7 @@ h1 .muted { color: var(--faint); }
 @keyframes bar { from { transform: scaleX(0); } }
 .tour-copy { max-width: 34em; min-height: 5.6em; animation: soft-rise 600ms var(--ease-out) both; }
 @keyframes soft-rise { from { opacity: 0; transform: translateY(10px); filter: blur(6px); } }
-.tour-copy h3 { margin-bottom: 4px; font: 600 19px var(--display); letter-spacing: -0.015em; }
+.tour-copy .tour-title { margin: 0 0 4px; color: var(--ink); font: 600 19px var(--display); letter-spacing: -0.015em; }
 .tour-copy p { margin: 0; color: var(--muted); font-size: 15px; }
 .hint { margin: -12px 0 0; color: var(--faint); font-size: 12px; }
 @media (hover: none) { .hint { display: none; } }
@@ -206,7 +208,8 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 /* ---------- engine ---------- */
 .nos { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 40px; margin: -8px 0 56px; color: var(--faint);
   font: 500 clamp(19px, 2.6vw, 28px) var(--mono); }
-.nos s { text-decoration: none; background: linear-gradient(var(--bad), var(--bad)) no-repeat 0 55% / 100% 2px; }
+.nos s { position: relative; text-decoration: none; }
+.nos s::after { content: ""; position: absolute; left: 0; right: 0; top: 55%; height: 2px; background: var(--bad); transform-origin: left; }
 
 /* ---------- privacy: packets on the wire (transform only, stays on the compositor) ---------- */
 .diagram { display: flex; align-items: center; max-width: 860px; margin: 0 auto 56px; }
@@ -258,13 +261,14 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
 .footer .brand { font-size: 16px; }
 .footer nav { display: flex; gap: 20px; }
 .footer nav a, .footer p a { color: var(--muted); font-size: 13px; text-decoration: none; }
+.footer p a { text-decoration: underline; text-underline-offset: 2px; }   /* inline link: not by colour alone */
 .footer nav a:hover, .footer p a:hover { color: var(--ink); }
 .footer p { flex-basis: 100%; margin: 0; color: var(--faint); font-size: 13px; }
 @media (min-width: 860px) { .footer p { flex-basis: auto; margin-left: auto; } }
 @media (max-width: 600px) { .footer { margin-top: 96px; } }
 
 /* ---------- motion: load-in, scroll reveals and scroll-linked effects (CSS only) ---------- */
-@keyframes rise { from { opacity: 0; transform: translateY(24px); filter: blur(6px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(28px); } }
 @media (prefers-reduced-motion: no-preference) {
   .rise { animation: rise 900ms var(--ease-out) both; animation-delay: calc(var(--d, 0) * 90ms); }
@@ -275,18 +279,18 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
     .head h2 { animation: wipe linear both; animation-timeline: view(); animation-range: entry 10% entry 70%; }
     .get .ctas .btn:first-child { animation: ring linear both; animation-timeline: view(); animation-range: entry 60% cover 45%; }
     .deck-in { animation: tilt linear both; animation-timeline: scroll(); animation-range: 0 420px; }
-    .nos s { animation: strike linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
+    .nos s::after { animation: strike linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
   }
 }
 @keyframes tilt { from { transform: rotateX(12deg) scale(0.96); } }
 @keyframes wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(0.35em); } to { clip-path: inset(0 0 -0.2em 0); } }
 @keyframes ring { from { box-shadow: 0 0 0 0 color-mix(in oklch, var(--accent) 55%, transparent); }
   to { box-shadow: 0 0 0 18px transparent, 0 8px 24px -12px var(--accent); } }
-@keyframes strike { from { background-size: 0 2px; } }
+@keyframes strike { from { transform: scaleX(0); } }
 @supports (animation-timeline: scroll()) {
-  .nav { animation: nav-clear linear both; animation-timeline: scroll(); animation-range: 0 100px; }
+  .nav::before { animation: nav-clear linear both; animation-timeline: scroll(); animation-range: 0 100px; }
 }
-@keyframes nav-clear { from { background: transparent; border-color: transparent; backdrop-filter: none; } }
+@keyframes nav-clear { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }

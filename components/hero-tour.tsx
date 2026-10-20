@@ -11,6 +11,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(true);
   const [ready, setReady] = useState(false);
+  const [rest, setRest] = useState(false);   // the four screenshots behind, loaded after the page
   const [tilt, setTilt] = useState(false);
 
   // The front screenshot leans a few degrees toward a mouse pointer; it eases back flat when the pointer leaves.
@@ -36,7 +37,11 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
   };
 
   useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));   // fan the deck out after first paint
+    // Only the front screenshot is in the first load; once the page has loaded, the rest come in and the deck fans out.
+    let id = 0;
+    const go = () => { setRest(true); id = requestAnimationFrame(() => setReady(true)); };
+    if (document.readyState === "complete") go();
+    else addEventListener("load", go, { once: true });
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) setAuto(false);
     // The app uses Ctrl+1..5; browsers keep those for themselves, so the page listens for plain 1..5.
     const onKey = (e: KeyboardEvent) => {
@@ -45,7 +50,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
       if (n >= 1 && n <= tabs.length) pick(n - 1);
     };
     addEventListener("keydown", onKey);
-    return () => { cancelAnimationFrame(id); removeEventListener("keydown", onKey); };
+    return () => { cancelAnimationFrame(id); removeEventListener("load", go); removeEventListener("keydown", onKey); };
   }, [tabs.length]);
 
   // -2..2: where each screenshot sits relative to the current one
@@ -56,7 +61,9 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
       <div className="deck" data-ready={ready} data-tilt={tilt} onPointerMove={lean} onPointerLeave={flat}>
         <div className="deck-in" id="tour-panel" role="tabpanel" aria-labelledby={`tab-${tabs[i].img}`}>
           {tabs.map((tab, n) => (
-            <img key={tab.img} src={asset(`/screens/${tab.img}.webp`)} width={568} height={596} decoding="async"
+            <img key={tab.img} width={568} height={596} decoding="async"
+              src={n === 0 || rest ? asset(`/screens/${tab.img}-1x.webp`) : undefined}
+              srcSet={n === 0 || rest ? `${asset(`/screens/${tab.img}-1x.webp`)} 1x, ${asset(`/screens/${tab.img}.webp`)} 2x` : undefined}
               fetchPriority={n === 0 ? "high" : "low"} data-pos={pos(n)} aria-hidden={n !== i}
               alt={t.alt.replace("{name}", tab.name)} onClick={() => n !== i && pick(n)} />
           ))}
@@ -79,7 +86,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
       </div>
 
       <div className="tour-copy" key={i} aria-live="polite">
-        <h3>{tabs[i].title}</h3>
+        <p className="tour-title">{tabs[i].title}</p>
         <p>{tabs[i].body}</p>
       </div>
       <p className="hint">{t.hint}</p>

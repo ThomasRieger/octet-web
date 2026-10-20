@@ -58,7 +58,7 @@ export function Home({ version: built }: { version: string | null }) {
     <>
       <header className="nav">
         <div className="wrap nav-in">
-          <a className="brand" href="#"><img src={asset("/icon.png")} width={26} height={26} alt="" />Octet</a>
+          <a className="brand" href="#"><img src={asset("/logo.webp")} width={26} height={26} alt="" />Octet</a>
           <nav className="links" aria-label="Sections">
             <a href="#paste">{t.nav.paste}</a>
             <a href="#engine">{t.nav.engine}</a>
@@ -114,7 +114,7 @@ export function Home({ version: built }: { version: string | null }) {
         <section className="wrap section" id="privacy">
           <Head t={t.privacy} />
           <div className="diagram reveal" role="img" aria-label={t.privacy.diagram}>
-            <div className="node"><img src={asset("/icon.png")} width={22} height={22} alt="" />{t.privacy.pc}</div>
+            <div className="node"><img src={asset("/logo.webp")} width={22} height={22} alt="" />{t.privacy.pc}</div>
             <div className="wire"><span>{t.privacy.wire}</span></div>
             <div className="node">{t.privacy.net}</div>
             <div className="wire dashed"><span>{t.privacy.wireOut}</span></div>
@@ -127,7 +127,7 @@ export function Home({ version: built }: { version: string | null }) {
 
         <section className="wrap section" id="download">
           <div className="get reveal">
-            <img className="get-icon" src={asset("/icon.png")} width={80} height={80} alt="" loading="lazy" />
+            <img className="get-icon" src={asset("/logo.webp")} width={80} height={80} alt="" loading="lazy" />
             <h2>{t.get.title}</h2>
             <p className="get-sub">{version ? `${version} · ` : ""}{t.get.sub}</p>
             <div className="ctas">
@@ -148,7 +148,7 @@ export function Home({ version: built }: { version: string | null }) {
 
       <footer className="footer">
         <div className="wrap footer-in">
-          <a className="brand" href="#"><img src={asset("/icon.png")} width={20} height={20} alt="" loading="lazy" />Octet</a>
+          <a className="brand" href="#"><img src={asset("/logo.webp")} width={20} height={20} alt="" loading="lazy" />Octet</a>
           <nav aria-label="Project">
             <a href={REPO}>GitHub</a>
             <a href={RELEASES}>Releases</a>
