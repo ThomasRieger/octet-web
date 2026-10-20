@@ -12,6 +12,9 @@
   --mono: "Cascadia Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* A soft spring (about 2% past the mark, then settles): for big things that move, like the screenshot deck. */
+  --spring: linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%,
+    1.006 50.1%, 1.015 55%, 1.017 63.9%, 1.001 85.9%, 1);
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -104,19 +107,28 @@ h1 .muted { color: var(--faint); }
 
 /* ---------- hero tour: rotating deck of the five tabs ---------- */
 .tour { display: grid; justify-items: center; gap: 24px; margin-top: 64px; }
-.deck { width: 100%; perspective: 1600px; }
+/* Every position uses the same transform list (translateX rotate scale), so a card travels on a clean path
+   between them instead of the browser falling back to matrix interpolation. The pointer tilt lives on the
+   whole deck, apart from the cards' own moves. */
+.deck { width: 100%; perspective: 1600px; transform: perspective(1600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 700ms var(--spring); }
+.deck[data-tilt="true"] { transition: transform 220ms var(--ease-out); }
 .deck-in { display: grid; place-items: center; transform-origin: 50% 0; }
 .deck img { grid-area: 1 / 1; width: min(560px, 100%); user-select: none; -webkit-user-drag: none;
-  transition: transform 900ms var(--ease-out), opacity 700ms var(--ease-out); }
-.deck img[data-pos="0"] { z-index: 3; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
-.deck[data-tilt="true"] img[data-pos="0"] { transition: transform 160ms var(--ease-out), opacity 700ms var(--ease-out); }
+  transition: transform 850ms var(--spring), opacity 600ms var(--ease-out); }
+.deck img[data-pos="0"] { z-index: 3; transform: translateX(0) rotate(0deg) scale(1); }
 .deck img[data-pos="1"], .deck img[data-pos="-1"] { z-index: 2; opacity: 0.45; cursor: pointer; }
 .deck img[data-pos="1"]:hover, .deck img[data-pos="-1"]:hover { opacity: 0.75; }
+/* A side card leans in a little under the pointer: it can be picked. */
+@media (hover: hover) and (min-width: 721px) {
+  .deck img[data-pos="1"]:hover { transform: translateX(57%) rotate(4deg) scale(0.84); }
+  .deck img[data-pos="-1"]:hover { transform: translateX(-57%) rotate(-4deg) scale(0.84); }
+}
 .deck img[data-pos="1"] { transform: translateX(60%) rotate(5deg) scale(0.82); }
 .deck img[data-pos="-1"] { transform: translateX(-60%) rotate(-5deg) scale(0.82); }
 .deck img[data-pos="2"] { transform: translateX(84%) rotate(9deg) scale(0.66); opacity: 0; pointer-events: none; }
 .deck img[data-pos="-2"] { transform: translateX(-84%) rotate(-9deg) scale(0.66); opacity: 0; pointer-events: none; }
-.deck[data-ready="false"] img:not([data-pos="0"]) { transform: scale(0.8); opacity: 0; }
+.deck[data-ready="false"] img:not([data-pos="0"]) { transform: translateX(0) rotate(0deg) scale(0.8); opacity: 0; }
 @media (max-width: 720px) {
   .tour { margin-top: 48px; }
   .deck img:not([data-pos="0"]) { opacity: 0; pointer-events: none; }
@@ -274,12 +286,12 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
   .rise { animation: rise 900ms var(--ease-out) both; animation-delay: calc(var(--d, 0) * 90ms); }
 
   @supports (animation-timeline: view()) {
-    .reveal { animation: reveal linear both; animation-timeline: view();
+    .reveal { animation: reveal var(--ease-out) both; animation-timeline: view();
       animation-range: entry calc(var(--k, 0) * 12%) entry calc(55% + var(--k, 0) * 12%); }
-    .head h2 { animation: wipe linear both; animation-timeline: view(); animation-range: entry 10% entry 70%; }
-    .get .ctas .btn:first-child { animation: ring linear both; animation-timeline: view(); animation-range: entry 60% cover 45%; }
-    .deck-in { animation: tilt linear both; animation-timeline: scroll(); animation-range: 0 420px; }
-    .nos s::after { animation: strike linear both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
+    .head h2 { animation: wipe var(--ease-out) both; animation-timeline: view(); animation-range: entry 10% entry 70%; }
+    .get .ctas .btn:first-child { animation: ring var(--ease-out) both; animation-timeline: view(); animation-range: entry 60% cover 45%; }
+    .deck-in { animation: tilt var(--ease-out) both; animation-timeline: scroll(); animation-range: 0 420px; }
+    .nos s::after { animation: strike var(--ease-out) both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
   }
 }
 @keyframes tilt { from { transform: rotateX(12deg) scale(0.96); } }
