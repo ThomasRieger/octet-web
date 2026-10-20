@@ -9,6 +9,7 @@ const config: NextConfig = {
   basePath,
   env: { NEXT_PUBLIC_BASE_PATH: basePath },   // for plain <img src> paths, which basePath doesn't rewrite
   images: { unoptimized: true },
+  experimental: { inlineCss: true },   // the stylesheet is small: inline it so it doesn't block first paint
 };
 
 export default config;
