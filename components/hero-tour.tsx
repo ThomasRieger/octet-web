@@ -19,8 +19,9 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
     if (e.pointerType !== "mouse" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const b = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - b.left) / b.width - 0.5, y = (e.clientY - b.top) / b.height - 0.5;
-    e.currentTarget.style.setProperty("--ry", `${(x * 8).toFixed(2)}deg`);
-    e.currentTarget.style.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
+    // pointer-tilt: rotateY maps x to ±6deg, rotateX maps y to ∓6deg
+    e.currentTarget.style.setProperty("--ry", `${(x * 12).toFixed(2)}deg`);
+    e.currentTarget.style.setProperty("--rx", `${(-y * 12).toFixed(2)}deg`);
     setTilt(true);
   };
   const flat = (e: PointerEvent<HTMLDivElement>) => {
