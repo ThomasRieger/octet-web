@@ -321,13 +321,14 @@ h3 { margin: 0 0 6px; font: 600 16px var(--display); letter-spacing: -0.01em; }
     .head h2 { animation: wipe var(--ease-out) both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
     /* pulse-focus: a ring from the download button, 50%→240% of its size, opacity .8→0, easeOutCubic */
     .get .ctas .btn:first-child { animation: ring var(--ease-out-cubic) both; animation-timeline: view(); animation-range: entry 60% cover 45%; }
-    /* scroll-depth-zoom: scale .78→1 and brightness .7→1 over the first 420px, easeInOutCubic */
-    .deck-in { animation: depth var(--ease-in-out-cubic) both; animation-timeline: scroll(); animation-range: 0 420px; }
+    /* scroll-depth-zoom, softened: a wheel step (~100px) moves the deck at most ~2.5%, never a jump.
+       Scale .9→1 and brightness .85→1 over the first 640px, easeInOutSine */
+    .deck-in { animation: depth var(--ease-in-out-sine) both; animation-timeline: scroll(); animation-range: 0 640px; }
     /* svg-stroke-draw: the strike draws left to right, easeOutCubic */
     .nos s::after { animation: strike var(--ease-out-cubic) both; animation-timeline: view(); animation-range: entry 40% cover 50%; }
   }
 }
-@keyframes depth { from { transform: scale(0.78); filter: brightness(0.7); } }
+@keyframes depth { from { transform: scale(0.9); filter: brightness(0.85); } }
 @keyframes wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(100%); } to { clip-path: inset(0 0 -0.2em 0); } }
 @keyframes ring { from { box-shadow: 0 0 0 0 color-mix(in oklch, var(--accent) 80%, transparent); }
   to { box-shadow: 0 0 0 24px transparent, 0 8px 24px -12px var(--accent); } }
