@@ -10,7 +10,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "sw
 const anuphan = Anuphan({ subsets: ["thai"], variable: "--font-anuphan", display: "swap", preload: false });
 
 // The page's name in search results says what Octet is, for people who've never heard the name.
-const site = "https://thomasrieger.github.io/octet-web/";
+const site = "https://octet-app.github.io/";
 const title = "Octet: free, open-source IP and DNS changer for Windows and macOS";
 export const metadata: Metadata = {
   metadataBase: new URL(site),
