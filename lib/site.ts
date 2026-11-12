@@ -1,8 +1,8 @@
-export const REPO = "https://github.com/MrTomato77/octet";
+export const REPO = "https://github.com/octet-app/octet";
 export const RELEASES = `${REPO}/releases`;
 export const EXE = `${RELEASES}/latest/download/Octet.exe`;
 export const DMG = `${RELEASES}/latest/download/Octet.dmg`;
-export const LATEST_API = "https://api.github.com/repos/MrTomato77/octet/releases/latest";
+export const LATEST_API = "https://api.github.com/repos/octet-app/octet/releases/latest";
 
 // Prefix for files in public/ ("/octet-web" on GitHub Pages).
 export const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;

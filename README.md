@@ -1,6 +1,6 @@
 # octet-web
 
-Website for [Octet](https://github.com/MrTomato77/octet). Next.js, static export.
+Website for [Octet](https://github.com/octet-app/octet). Next.js, static export.
 
 ```sh
 pnpm install
