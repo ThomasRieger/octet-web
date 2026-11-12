@@ -5,7 +5,7 @@ export type Lang = "en" | "th";
 
 const en = {
   meta: {
-    description: "A fast, modern take on Simple IP Config for Windows and macOS, written in Rust. No installer, no telemetry.",
+    description: "Switch static IP, DHCP and DNS in seconds, then see who else is on the network. A fast, modern take on Simple IP Config for Windows and macOS, written in Rust. No installer, no telemetry.",
   },
   nav: { paste: "Paste", engine: "Engine", privacy: "Privacy", download: "Download" },
   hero: {
@@ -106,7 +106,7 @@ export type Dict = typeof en;
 
 const th: Dict = {
   meta: {
-    description: "Simple IP Config ยุคใหม่สำหรับ Windows และ macOS ที่เร็วกว่าเดิม เขียนด้วย Rust ไม่ต้องติดตั้ง ไม่เก็บข้อมูลการใช้งาน",
+    description: "โปรแกรมเปลี่ยน IP และ DNS ฟรี สลับ Static IP, DHCP และ DNS ได้ในไม่กี่วินาที แล้วดูว่ามีใครอยู่ในเน็ตเวิร์ก Simple IP Config ยุคใหม่สำหรับ Windows และ macOS เขียนด้วย Rust ไม่ต้องติดตั้ง ไม่เก็บข้อมูลการใช้งาน",
   },
   nav: { paste: "วางค่า", engine: "ความเร็ว", privacy: "ความเป็นส่วนตัว", download: "ดาวน์โหลด" },
   hero: {
