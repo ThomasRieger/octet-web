@@ -4,14 +4,14 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } fr
 import type { Dict } from "@/lib/i18n.ts";
 import { asset } from "@/lib/site.ts";
 
-// The five tab screenshots as a rotating deck: the current tab in front, its neighbours fanned behind.
+// The tab screenshots as a rotating deck: the current tab in front, its neighbours fanned behind.
 // It cycles until the visitor picks a tab; the progress bar's CSS animation is the timer, so hover pauses it.
 export function HeroTour({ t }: { t: Dict["tour"] }) {
   const tabs = t.tabs;
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(true);
   const [ready, setReady] = useState(false);
-  const [rest, setRest] = useState(false);   // the four screenshots behind, loaded after the page
+  const [rest, setRest] = useState(false);   // the screenshots behind, loaded after the page
   const [tilt, setTilt] = useState(false);
 
   // The front screenshot leans a few degrees toward a mouse pointer; it eases back flat when the pointer leaves.
@@ -30,6 +30,13 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
     setTilt(false);
   };
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
+  const seg = useRef<HTMLDivElement>(null);
+
+  // On a phone the tab bar scrolls sideways; keep the current tab in view (the bar only, never the page).
+  useEffect(() => {
+    const s = seg.current, b = btns.current[i];
+    if (s && b && s.scrollWidth > s.clientWidth) s.scrollTo({ left: b.offsetLeft - (s.clientWidth - b.offsetWidth) / 2, behavior: "smooth" });
+  }, [i]);
 
   const pick = (n: number, focus = false) => {
     setAuto(false);
@@ -44,7 +51,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
     if (document.readyState === "complete") go();
     else addEventListener("load", go, { once: true });
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) setAuto(false);
-    // The app uses Ctrl+1..5; browsers keep those for themselves, so the page listens for plain 1..5.
+    // The app uses Ctrl+1..6 (⌘ on a Mac); browsers keep those for themselves, so the page listens for plain digits.
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey || (e.target as Element).closest("input, textarea")) return;
       const n = Number(e.key);
@@ -54,8 +61,11 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
     return () => { cancelAnimationFrame(id); removeEventListener("load", go); removeEventListener("keydown", onKey); };
   }, [tabs.length]);
 
-  // -2..2: where each screenshot sits relative to the current one
-  const pos = (n: number) => ((n - i + tabs.length + 2) % tabs.length) - 2;
+  // -2..2: where each screenshot sits relative to the current one; anything further waits hidden at ±2
+  const pos = (n: number) => {
+    const p = (n - i + tabs.length) % tabs.length, r = p > tabs.length / 2 ? p - tabs.length : p;
+    return Math.max(-2, Math.min(2, r));
+  };
 
   return (
     <div className="tour">
@@ -71,7 +81,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
         </div>
       </div>
 
-      <div className="seg" role="tablist" style={{ "--i": i } as CSSProperties}
+      <div className="seg" role="tablist" ref={seg} style={{ "--i": i, "--n": tabs.length } as CSSProperties}
         onKeyDown={e => {
           if (e.key === "ArrowRight") { e.preventDefault(); pick((i + 1) % tabs.length, true); }
           if (e.key === "ArrowLeft") { e.preventDefault(); pick((i + tabs.length - 1) % tabs.length, true); }
@@ -86,7 +96,7 @@ export function HeroTour({ t }: { t: Dict["tour"] }) {
         ))}
       </div>
 
-      {/* All five texts share one cell, so the block is as tall as the longest and nothing below moves;
+      {/* All the texts share one cell, so the block is as tall as the longest and nothing below moves;
           the old one fades up and out while the new one rises in. */}
       <div className="tour-copy" aria-live="polite">
         {tabs.map((tab, n) => (

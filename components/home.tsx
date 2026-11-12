@@ -7,11 +7,12 @@ import { HeroTour } from "@/components/hero-tour.tsx";
 import { OctetRoll } from "@/components/octet-roll.tsx";
 import { PasteDemo } from "@/components/paste-demo.tsx";
 import { dict, type Lang } from "@/lib/i18n.ts";
-import { asset, DOWNLOAD, LATEST_API, RELEASES, REPO } from "@/lib/site.ts";
+import { asset, DMG, EXE, LATEST_API, RELEASES, REPO } from "@/lib/site.ts";
 
 const d = (n: number) => ({ "--d": n }) as CSSProperties;   // stagger step for .rise
 const k = (n: number) => ({ "--k": n }) as CSSProperties;   // stagger step for .reveal (each one enters a little later)
-const HASH = String.raw`(Get-FileHash .\Octet.exe).Hash`;
+const HASH_WIN = String.raw`(Get-FileHash .\Octet.exe).Hash`;
+const HASH_MAC = "shasum -a 256 Octet.dmg";
 
 const DownloadIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -36,6 +37,13 @@ export function Home({ version: built }: { version: string | null }) {
   // null until mounted: the prerendered HTML is English, the head script may have asked for Thai.
   const [lang, setLang] = useState<Lang | null>(null);
   const t = dict[lang ?? "en"];
+
+  // The prerendered page offers Windows first; a Mac (not an iPad, which also says "Mac") gets the .dmg first.
+  const [mac, setMac] = useState(false);
+  useEffect(() => setMac(/Mac/.test(navigator.platform || navigator.userAgent) && navigator.maxTouchPoints < 2), []);
+  const win = { href: EXE, label: t.hero.dlWin, os: "Windows" }, osx = { href: DMG, label: t.hero.dlMac, os: "macOS" };
+  const [main, other] = mac ? [osx, win] : [win, osx];
+  const hashes = mac ? [HASH_MAC, HASH_WIN] : [HASH_WIN, HASH_MAC];
 
   useEffect(() => setLang(document.documentElement.lang === "th" ? "th" : "en"), []);
   useEffect(() => {
@@ -81,7 +89,7 @@ export function Home({ version: built }: { version: string | null }) {
           <div className="hero-bg" aria-hidden="true" />
           <div className="wrap">
             <a className="badge rise" style={d(0)} href={RELEASES}>
-              <span className="pulse" /><span><span className="ver" key={version ?? ""}>{version ?? t.hero.latest}</span> · {t.hero.windows}</span>
+              <span className="pulse" /><span><span className="ver" key={version ?? ""}>{version ?? t.hero.latest}</span> · {t.hero.platforms}</span>
             </a>
             <h1 className="rise" style={d(1)} aria-label={t.hero.label}>
               <span>{t.hero.before} <OctetRoll /></span>
@@ -89,10 +97,12 @@ export function Home({ version: built }: { version: string | null }) {
             </h1>
             <p className="lede rise" style={d(2)}>{t.hero.lede}</p>
             <div className="ctas rise" style={d(3)}>
-              <a className="btn lg" href={DOWNLOAD}><DownloadIcon />{t.hero.download}</a>
+              <a className="btn lg" href={main.href}><DownloadIcon />{main.label}</a>
               <a className="btn lg ghost" href={REPO}>{t.hero.source}</a>
             </div>
-            <p className="meta rise" style={d(4)}>{t.hero.meta}</p>
+            <p className="meta rise" style={d(4)}>
+              <a href={other.href}>{t.hero.also[0]}{other.os}{t.hero.also[1]}</a> · {t.hero.meta}
+            </p>
             <div className="rise" style={d(5)}><HeroTour t={t.tour} /></div>
           </div>
         </section>
@@ -117,7 +127,7 @@ export function Home({ version: built }: { version: string | null }) {
             <div className="wire"><span>{t.privacy.wire}</span></div>
             <div className="node">{t.privacy.net}</div>
             <div className="wire dashed"><span>{t.privacy.wireOut}</span></div>
-            <div className="node out">ipinfo.io · github.com</div>
+            <div className="node out">Cloudflare · GitHub</div>
           </div>
           <div className="cols two">
             {t.privacy.items.map(([h, p], n) => <div className="col reveal" style={k(n % 2)} key={h}><h3>{h}</h3><p>{p}</p></div>)}
@@ -130,16 +140,17 @@ export function Home({ version: built }: { version: string | null }) {
             <h2>{t.get.title}</h2>
             <p className="get-sub">{version ? `${version} · ` : ""}{t.get.sub}</p>
             <div className="ctas">
-              <a className="btn lg" href={DOWNLOAD}><DownloadIcon />{t.hero.download}</a>
-              <a className="btn lg ghost" href={RELEASES}>{t.get.all}</a>
+              <a className="btn lg" href={main.href}><DownloadIcon />{main.label}</a>
+              <a className="btn lg ghost" href={other.href}><DownloadIcon />{other.label}</a>
             </div>
+            <p className="all"><a href={RELEASES}>{t.get.all}</a></p>
             <ul className="notes">
               {t.get.notes.map(([b, p]) => <li key={b}><b>{b}</b>{p}</li>)}
             </ul>
             <p className="signed">{t.get.signed}</p>
             <div className="hash">
-              <span>{t.get.hash} <code>Octet.exe.sha256</code></span>
-              <pre><code>{HASH}</code><CopyButton text={HASH} label={t.get.copy} done={t.get.copied} /></pre>
+              <span>{t.get.hash}</span>
+              {hashes.map(h => <pre key={h}><code>{h}</code><CopyButton text={h} label={t.get.copy} done={t.get.copied} /></pre>)}
             </div>
           </div>
         </section>

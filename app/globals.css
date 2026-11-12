@@ -97,7 +97,7 @@ html[data-pending] body { opacity: 0; }   /* see the head script in app/layout.t
   background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
   background-size: 56px 56px; background-position: center top;
   mask-image: radial-gradient(ellipse 55% 60% at 50% 0%, #000 20%, transparent 70%); }
-.hero-bg::after { content: ""; position: absolute; left: 50%; top: 420px; width: min(900px, 120vw); height: 520px; translate: -50% 0;
+.hero-bg::after { content: ""; position: absolute; left: 50%; top: 420px; width: min(900px, 100%); height: 520px; translate: -50% 0;
   background: radial-gradient(closest-side, color-mix(in oklch, var(--accent) 18%, transparent), transparent); }
 .badge { display: inline-flex; align-items: center; gap: 10px; padding: 5px 14px 5px 12px; border: 1px solid var(--border);
   border-radius: 999px; background: color-mix(in oklch, var(--surface) 70%, transparent); color: var(--muted);
@@ -123,8 +123,11 @@ h1 .muted { color: var(--faint); }
 .lede { max-width: 36em; margin: 0 auto 32px; color: var(--muted); font-size: clamp(17px, 1.6vw, 19px); text-wrap: pretty; }
 .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .meta { margin: 18px 0 0; color: var(--faint); font-size: 13px; }
+.meta a, .all a { color: var(--muted); text-underline-offset: 3px; }
+.meta a:hover, .all a:hover { color: var(--ink); }
+.all { margin: 16px 0 0; font-size: 14px; }
 
-/* ---------- hero tour: rotating deck of the five tabs ---------- */
+/* ---------- hero tour: rotating deck of the tabs ---------- */
 .tour { display: grid; justify-items: center; gap: 24px; margin-top: 64px; }
 /* Every position uses the same transform list (translateX rotate scale), so a card travels on a clean path
    between them instead of the browser falling back to matrix interpolation. The pointer tilt lives on the
@@ -155,14 +158,15 @@ h1 .muted { color: var(--faint); }
 .deck[data-ready="false"] img:not([data-pos="0"]) { transform: translateX(0) rotate(0deg) scale(0.8); opacity: 0; }
 @media (max-width: 720px) {
   .tour { margin-top: 48px; }
+  .deck { overflow-x: clip; }   /* the hidden cards sit 16% off to the side; without this a phone zooms the page out */
   .deck img:not([data-pos="0"]) { opacity: 0; pointer-events: none; }
   .deck img[data-pos="1"], .deck img[data-pos="2"] { transform: translateX(16%) rotate(0deg) scale(0.94); }
   .deck img[data-pos="-1"], .deck img[data-pos="-2"] { transform: translateX(-16%) rotate(0deg) scale(0.94); }
 }
 
-.seg { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: min(560px, 100%); padding: 4px;
+.seg { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); width: min(660px, 100%); padding: 4px;
   border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
-.seg-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 5); border-radius: 8px;
+.seg-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / var(--n)); border-radius: 8px;
   background: var(--accent-soft); transform: translateX(calc(var(--i) * 100%)); transition: transform 590ms var(--spring-pill); }
 .seg button { position: relative; z-index: 1; height: 38px; padding: 0 4px; border: 0; border-radius: 8px; background: none;
   color: var(--muted); font: 500 14px var(--font); white-space: nowrap; cursor: pointer; transition: color var(--tint); }
@@ -180,7 +184,13 @@ h1 .muted { color: var(--faint); }
 .tour-copy p { margin: 0; color: var(--muted); font-size: 15px; }
 .hint { margin: -12px 0 0; color: var(--faint); font-size: 12px; }
 @media (hover: none) { .hint { display: none; } }
-@media (max-width: 480px) { .seg button { font-size: 13px; } }
+/* too narrow for every tab at once: fixed-width tabs that scroll sideways (hero-tour keeps the current one in view) */
+@media (max-width: 660px) {
+  .seg { grid-template-columns: repeat(var(--n), 92px); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .seg::-webkit-scrollbar { display: none; }
+  .seg-pill { width: 92px; }
+  .seg button { font-size: 13px; }
+}
 
 /* ---------- sections ---------- */
 .section { padding-top: 128px; }
