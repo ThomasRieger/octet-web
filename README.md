@@ -14,8 +14,11 @@ app/          layout (fonts, metadata, language pick before paint), page, styles
 components/   home (all sections + EN/TH switch), and the interactive bits:
               rolling headline IP, hero tour deck, paste demo, copy button
 lib/          i18n (all copy, EN + TH), setup parser (+ test), site links / release version
-public/       app screenshots (WebP)
+public/       screens/: app screenshots (WebP, 1x and 2x); app/: a copy of Octet's ui/ (the Paste demo, ?embed)
 ```
+
+When Octet ships a new version, refresh `public/app/` from its `ui/` folder and `public/screens/` from its
+`assets/` (each PNG as `<name>.webp` at 1136px and `<name>-1x.webp` at 568px).
 
 All text lives in `lib/i18n.ts`; the Thai follows the app's own wording. The language switches in place
 (no reload), is remembered in `localStorage`, and defaults to Thai for Thai browsers.
