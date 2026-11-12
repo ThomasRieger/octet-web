@@ -9,7 +9,17 @@ import "./globals.css";
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
 const anuphan = Anuphan({ subsets: ["thai"], variable: "--font-anuphan", display: "swap", preload: false });
 
-export const metadata: Metadata = { title: "Octet", description: dict.en.meta.description };
+// The page's name in search results says what Octet is, for people who've never heard the name.
+const site = "https://thomasrieger.github.io/octet-web/";
+const title = "Octet: free, open-source IP and DNS changer for Windows and macOS";
+export const metadata: Metadata = {
+  metadataBase: new URL(site),
+  title,
+  description: dict.en.meta.description,
+  alternates: { canonical: site },
+  openGraph: { type: "website", url: site, siteName: "Octet", title, description: dict.en.meta.description, images: [{ url: "screens/ip.webp", alt: "Octet on the IP & DNS tab" }] },
+  twitter: { card: "summary_large_image", title, description: dict.en.meta.description, images: ["screens/ip.webp"] },
+};
 
 // Runs before first paint: pick the saved language, else Thai for Thai browsers. A Thai page stays hidden
 // until React has swapped the text in (or 1.2s pass, so a script failure never leaves it blank).
